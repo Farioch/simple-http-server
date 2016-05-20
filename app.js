@@ -6,6 +6,16 @@ var app = express();
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
+//middleware just to add 'http://' if omited in url
+var checkUrl = function(req, res, next) {
+	var urlToCheck = req.query.url;
+	if (!(urlToCheck.slice(0,7) === 'http://') && !(urlToCheck.slice(0,8) === 'https://'))
+		req.query.url = 'http://' + urlToCheck;
+	next();
+}
+
+app.use(checkUrl);
+
 //handle for all requests at localhost:3000/
 app.get('/', function (req, res) {
 	if (req.query.url !== undefined) {
@@ -58,3 +68,4 @@ app.use(function(req, res, next) {
 app.listen(3000, function () {
   console.log('Http-server started on port 3000!');
 });
+
