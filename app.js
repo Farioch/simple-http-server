@@ -9,7 +9,7 @@ app.set('view engine', 'ejs');
 //middleware just to add 'http://' if omited in url
 var checkUrl = function(req, res, next) {
 	var urlToCheck = req.query.url;
-	if (!(urlToCheck.slice(0,7) === 'http://') && !(urlToCheck.slice(0,8) === 'https://'))
+	if (urlToCheck && !(urlToCheck.slice(0,7) === 'http://') && !(urlToCheck.slice(0,8) === 'https://'))
 		req.query.url = 'http://' + urlToCheck;
 	next();
 }
@@ -56,12 +56,12 @@ app.get('/', function (req, res) {
 //error handler, just in case, may be redundant
 app.use(function(err, req, res, next) {
   console.error(err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send('Something broke or wrong route!');
 });
 
 //error handler for 404 Not found, just in case, may be redundant
 app.use(function(req, res, next) {
-  res.status(404).send('Sorry, cant find that!');
+  res.status(404).send('Sorry, cant find that! Probably query missing!');
 });
 
 //server port listening
